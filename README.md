@@ -15,7 +15,7 @@
 #### Dự án được quản lý trên GitHub, sử dụng GitHub Desktop để clone, commit, push/pull code. Mỗi thành viên trong nhóm đều có trách nhiệm rõ ràng, đảm bảo tiến độ và chất lượng sản phẩm cuối kỳ.
 
 # ⚙️ Hướng dẫn cài đặt & chạy #
-## 1. 💻 Clone repository về máy ##
+## 1. Clone repository về máy ##
 GitHub Desktop:
 
 Mở GitHub Desktop → File → Clone repository.
@@ -28,12 +28,12 @@ Git command line:
 
 bash
 git clone https://github.com/25730162/Tetris.git
-## 2. 🛠 Mở dự án ##
+## 2. Mở dự án ##
 Mở bằng Visual Studio Code hoặc IDE hỗ trợ C++.
 
 Kiểm tra file tetris.cpp và các file cấu hình trong thư mục .vscode.
 
-## 3. ▶️ Biên dịch & chạy ##
+## 3. Biên dịch & chạy ##
 Nếu dùng g++:
 
 bash
@@ -55,15 +55,15 @@ Nhấn Run hoặc dùng cấu hình trong .vscode/tasks.json.
 ❌ Trò chơi kết thúc khi khối chạm đỉnh bảng.
 
 # 👥 Phân công nhóm #
-- 📑 **Vương & Tuấn**  
+ **Vương & Tuấn**  
   - Phụ trách làm hợp đồng và viết báo cáo (2 người phối hợp).
   - Vương: Viết và hoàn thiện phần README, tài liệu hướng dẫn.
 
-- 🧑‍💻 **Quý**  
+ **Quý**  
   - Viết hàm `removeline` để xử lý xóa hàng.  
   - Cài đặt tốc độ rơi của khối.
 
-- 🎮 **Khôi**  
+**Khôi**  
   - Viết hàm `block` để quản lý khối.  
   - Cài đặt chức năng xoay khối.
 
