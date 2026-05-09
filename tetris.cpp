@@ -7,6 +7,9 @@ using namespace std;
 char board[H][W] = {};
 
 int x, y, b;
+
+char curBlock[4][4];
+
 char blocks[][4][4] ={
         {{' ','I',' ',' '},
          {' ','I',' ',' '},
@@ -73,3 +76,45 @@ char blocks[][4][4] ={
          {'L','L','L',' '},
          {' ',' ',' ',' '}}
 };
+
+
+bool CanRotate(){
+
+        char temp[4][4];
+        for(int i=0; i<4; i++){
+                for(int j=0; j<4; j++){
+                        temp[i][j] = curBlock[3-j][i];
+                }
+        }
+        for(int i=0; i<4; i++){
+                for(int j=0; j<4; j++){
+                        if(temp[i][j] != ' '){
+
+                                int xt = x + j;
+                                int yt = y + i;
+
+                                if(xt < 1 || xt >= W-1 || yt >= H-1)
+                                   return false;
+
+                                if(board[yt][xt] != ' ')
+                                   return false;
+                               
+                        }  
+        }
+}
+
+return true;
+}
+
+void rotateBlock(){
+
+    char temp[4][4];
+
+    for(int i=0;i<4;i++)
+        for(int j=0;j<4;j++)
+            temp[i][j] = curBlock[i][j];
+
+    for(int i=0;i<4;i++)
+        for(int j=0;j<4;j++)
+            curBlock[i][j] = temp[3-j][i];
+}
