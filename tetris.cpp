@@ -118,15 +118,20 @@ int main()
         boardDelBlock();
         if (kbhit()){
             char c = getch();
-            if (c == 'a' && canMove(-1,0)) x--;
-            if (c == 'd' && canMove( 1,0)) x++;
-            if (c == 'x' && canMove( 0,1)) y++;
-            if (c == 'q') break;
+            if ((c == 'a' || c == 'A') && canMove(-1,0)) x--;
+            if ((c == 'd' || c == 'D') && canMove( 1,0)) x++;
+            if ((c == 'x' || c == 'X') && canMove( 0,1)) y++;
+            if (c == 'q' || c == 'Q') break;
         }
         if (canMove(0,1)) y++;
         else{
             block2Board();
             x = 5; y = 0; b = rand()%7;
+            if (!canMove(0, 0)) {
+                system("cls");
+                cout << "Game Over!" << endl;
+                break;
+            }
         }
         block2Board();
         draw();
