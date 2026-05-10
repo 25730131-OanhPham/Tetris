@@ -1,9 +1,13 @@
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 #include <conio.h>
+#include <windows.h>
 
 using namespace std;
 #define H 20
 #define W 15
+
 char board[H][W] = {};
 
 int x, y, b;
@@ -79,7 +83,7 @@ bool canMove(int dx, int dy){
             if (blocks[b][i][j] != ' ') {
                 int xt = x + j + dx;
                 int yt = y + i + dy;
-                if (xt < 1 || xt >= W-1 || yt >= H-1 ) return false;
+                if (xt < 1 || xt >= W-1 || yt < 1 || yt >= H-1 ) return false;
                 if (board[yt][xt] != ' ') return false;
             }
     return true;
@@ -127,7 +131,7 @@ int main()
         else{
             block2Board();
             x = 5; y = 0; b = rand()%7;
-            if (!canMove(0, 0)) {
+            if (!canMove(0, 1)) {
                 system("cls");
                 cout << "Game Over!" << endl;
                 break;
@@ -135,7 +139,7 @@ int main()
         }
         block2Board();
         draw();
-        _sleep(1000);
+        Sleep(150);
     }
     return 0;
 }
