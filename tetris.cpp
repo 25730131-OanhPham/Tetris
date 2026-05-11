@@ -1,73 +1,53 @@
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 #include <conio.h>
+#include <windows.h>
 
 using namespace std;
 #define H 20
 #define W 15
+
 char board[H][W] = {};
 
 int x, y, b;
 char blocks[][4][4] ={
+        // I-block (hình thẳng - dọc)
         {{' ','I',' ',' '},
          {' ','I',' ',' '},
          {' ','I',' ',' '},
          {' ','I',' ',' '}},
-        {{' ','I',' ',' '},
-         {' ','I',' ',' '},
-         {' ','I',' ',' '},
-         {' ','I',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
-         {' ',' ',' ',' '}},
+        // I-block (hình thẳng - ngang)
         {{' ',' ',' ',' '},
          {'I','I','I','I'},
          {' ',' ',' ',' '},
          {' ',' ',' ',' '}},
+        // O-block (hình vuông)
         {{' ',' ',' ',' '},
          {' ','O','O',' '},
          {' ','O','O',' '},
          {' ',' ',' ',' '}},
+        // T-block (hình T - lên)
         {{' ',' ',' ',' '},
          {' ','T',' ',' '},
          {'T','T','T',' '},
          {' ',' ',' ',' '}},
+        // S-block (hình S)
         {{' ',' ',' ',' '},
          {' ','S','S',' '},
          {'S','S',' ',' '},
          {' ',' ',' ',' '}},
+        // Z-block (hình Z)
         {{' ',' ',' ',' '},
          {'Z','Z',' ',' '},
          {' ','Z','Z',' '},
          {' ',' ',' ',' '}},
+        // J-block (hình J)
         {{' ',' ',' ',' '},
          {'J',' ',' ',' '},
          {'J','J','J',' '},
          {' ',' ',' ',' '}},
+        // L-block (hình L)
         {{' ',' ',' ',' '},
          {' ',' ','L',' '},
          {'L','L','L',' '},
@@ -79,7 +59,7 @@ bool canMove(int dx, int dy){
             if (blocks[b][i][j] != ' ') {
                 int xt = x + j + dx;
                 int yt = y + i + dy;
-                if (xt < 1 || xt >= W-1 || yt >= H-1 ) return false;
+                if (xt < 1 || xt >= W-1 || yt < 1 || yt >= H-1 ) return false;
                 if (board[yt][xt] != ' ') return false;
             }
     return true;
@@ -118,19 +98,24 @@ int main()
         boardDelBlock();
         if (kbhit()){
             char c = getch();
-            if (c == 'a' && canMove(-1,0)) x--;
-            if (c == 'd' && canMove( 1,0)) x++;
-            if (c == 'x' && canMove( 0,1)) y++;
-            if (c == 'q') break;
+            if ((c == 'a' || c == 'A') && canMove(-1,0)) x--;
+            if ((c == 'd' || c == 'D') && canMove( 1,0)) x++;
+            if ((c == 'x' || c == 'X') && canMove( 0,1)) y++;
+            if (c == 'q' || c == 'Q') break;
         }
         if (canMove(0,1)) y++;
         else{
             block2Board();
             x = 5; y = 0; b = rand()%7;
+            if (!canMove(0, 1)) {
+                system("cls");
+                cout << "Game Over!" << endl;
+                break;
+            }
         }
         block2Board();
         draw();
-        _sleep(1000);
+        Sleep(150);
     }
     return 0;
 }
