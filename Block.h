@@ -50,5 +50,13 @@ public:
          {' ',' ','L',' '},
          {'L','L','L',' '},
          {' ',' ',' ',' '}}
+    };
+
+    Block(){
+        spawn();
     }
-}
+
+    void spawn(){}
+
+    void rotate(){}
+};
