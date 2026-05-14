@@ -10,6 +10,8 @@ using namespace std;
 
 char board[H][W] = {};
 
+char curBlock[4][4] = {};
+
 int x, y, b;
 char blocks[][4][4] ={
         // I-block (hình thẳng - dọc)
