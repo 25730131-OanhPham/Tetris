@@ -110,7 +110,19 @@ void removeLine()
 }
 
 bool CanRotate(){};
-void Rotate(){};
+void Rotate(){
+
+    char temp[4][4];
+
+    for(int i = 0; i < 4; i++)
+        for(int j = 0; j < 4; j++)
+            temp[i][j] = curBlock[i][j];
+
+    for(int i = 0; i < 4; i ++)
+        for(int j  = 0; j < 4; j++)
+            curBlock[i][j] = temp[3-j][i];
+};
+
 int main()
 {
     srand(time(0));
