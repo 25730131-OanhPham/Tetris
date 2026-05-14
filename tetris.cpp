@@ -8,6 +8,10 @@ using namespace std;
 #define H 20
 #define W 15
 
+int score = 0;  // diem nguoi choi
+int level = 1;  // cap do
+int totalLines = 0;  // tong so hang da pha
+int fallSpeed = 500  // toc do roi (ms)
 char board[H][W] = {};
 
 int x, y, b;
@@ -106,6 +110,42 @@ void removeLine()
         }
     }
 }
+
+// Ham tinh diem nguoi choi 
+// lineSCleared  so hang pha duoc
+void calculateScore(int lineScleared){
+
+    int points = 0;
+
+    switch (lineScleared)
+    {
+        case 1:
+        points = 100; break;
+        
+        case 2:
+        points = 300; break;
+
+        case 3:
+        points = 500; break;
+
+        case 4:
+        points = 800; break;
+
+        default:
+        points = 0;
+
+    }
+
+    // nhan theo level
+    score += points * level;
+
+    // cong tong so hang
+    totalLines += lineScleared;
+
+    // cap nhap level
+    updateLevel();
+}
+
 int main()
 {
     srand(time(0));
