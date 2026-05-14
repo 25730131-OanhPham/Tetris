@@ -67,5 +67,15 @@ public:
                 shape[i][j] = blocks[type][i][j];
     }
 
-    void rotate(){}
+    void rotate(){
+        char temp[4][4];
+        
+        for(int i = 0; i < 4; i++ )
+            for(int j = 0; j < 4; j++ )
+                temp[i][j] = shape[i][j];
+        
+        for(int i = 0; i < 4; i++ )
+            for(int j = 0; j < 4; j++ )
+                shape[i][j] = temp[3-j][i];            
+    }
 };
