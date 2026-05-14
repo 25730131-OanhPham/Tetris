@@ -8,6 +8,10 @@ using namespace std;
 #define H 20
 #define W 15
 
+int level = 1; // cap do
+int totalLine = 0; // tong so hang da pha
+int fallSpeed = 500;  // toc do roi
+
 char board[H][W] = {};
 
 int x, y, b;
@@ -102,10 +106,28 @@ void removeLine()
                     board[ii][jj] = board[ii-1][jj];
             i++;
             draw();
-            _sleep(400);
+            _sleep(200);
         }
     }
 }
+
+// ham cap nhat level
+void updateLevel(){ 
+    
+    // moi 10 hang tang 1 level
+    level = (totalLine / 10 ) + 1;
+
+    // giam toc do roi khi level tang
+    fallSpeed = 500 - (level - 1) * 40;
+
+    // gioi han toc do toi thieu
+    if (fallSpeed < 100)
+    {
+        fallSpeed = 100;
+    }
+
+      
+} 
 int main()
 {
     srand(time(0));
