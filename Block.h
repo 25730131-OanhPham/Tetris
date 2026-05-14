@@ -56,7 +56,16 @@ public:
         spawn();
     }
 
-    void spawn(){}
+    void spawn(){
+        x = 0; 
+        y = 0;
+
+        type = rand()%8;
+
+        for(int i = 0; i < 4; i++ )
+            for(int j = 0; j < 4; j++ )
+                shape[i][j] = blocks[type][i][j];
+    }
 
     void rotate(){}
 };
