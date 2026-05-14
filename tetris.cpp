@@ -106,6 +106,9 @@ void removeLine()
         }
     }
 }
+
+bool CanRotate(){};
+void Rotate(){};
 int main()
 {
     srand(time(0));
