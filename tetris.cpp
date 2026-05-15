@@ -1,106 +1,238 @@
 #include <iostream>
-#include <cstdlib>
-#include <ctime>
-#include <conio.h>
 #include <windows.h>
+#include <conio.h>
+#include <ctime>
 
 using namespace std;
 
-#define H 22
-#define W 16
+const int WIDTH = 12;
+const int HEIGHT = 22;
 
-char board[H][W];
+char board[HEIGHT][WIDTH];
 
-int x, y, b;
-
-// ================= BLOCKS =================
-char blocks[][4][4] =
+// ================= TETROMINO =================
+int shapes[7][4][4] =
 {
-    // I-block (hình thẳng - dọc)
-        {{' ','I',' ',' '},
-         {' ','I',' ',' '},
-         {' ','I',' ',' '},
-         {' ','I',' ',' '}},
-        // I-block (hình thẳng - ngang)
-        {{' ',' ',' ',' '},
-         {'I','I','I','I'},
-         {' ',' ',' ',' '},
-         {' ',' ',' ',' '}},
-        // O-block (hình vuông)
-        {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
-         {' ',' ',' ',' '}},
-        // T-block (hình T - lên)
-        {{' ',' ',' ',' '},
-         {' ','T',' ',' '},
-         {'T','T','T',' '},
-         {' ',' ',' ',' '}},
-        // S-block (hình S)
-        {{' ',' ',' ',' '},
-         {' ','S','S',' '},
-         {'S','S',' ',' '},
-         {' ',' ',' ',' '}},
-        // Z-block (hình Z)
-        {{' ',' ',' ',' '},
-         {'Z','Z',' ',' '},
-         {' ','Z','Z',' '},
-         {' ',' ',' ',' '}},
-        // J-block (hình J)
-        {{' ',' ',' ',' '},
-         {'J',' ',' ',' '},
-         {'J','J','J',' '},
-         {' ',' ',' ',' '}},
-        // L-block (hình L)
-        {{' ',' ',' ',' '},
-         {' ',' ','L',' '},
-         {'L','L','L',' '},
-         {' ',' ',' ',' '}}
+    // I
+    {
+        {0,0,0,0},
+        {1,1,1,1},
+        {0,0,0,0},
+        {0,0,0,0}
+    },
+
+    // O
+    {
+        {0,1,1,0},
+        {0,1,1,0},
+        {0,0,0,0},
+        {0,0,0,0}
+    },
+
+    // T
+    {
+        {0,1,0,0},
+        {1,1,1,0},
+        {0,0,0,0},
+        {0,0,0,0}
+    },
+
+    // S
+    {
+        {0,1,1,0},
+        {1,1,0,0},
+        {0,0,0,0},
+        {0,0,0,0}
+    },
+
+    // Z
+    {
+        {1,1,0,0},
+        {0,1,1,0},
+        {0,0,0,0},
+        {0,0,0,0}
+    },
+
+    // J
+    {
+        {1,0,0,0},
+        {1,1,1,0},
+        {0,0,0,0},
+        {0,0,0,0}
+    },
+
+    // L
+    {
+        {0,0,1,0},
+        {1,1,1,0},
+        {0,0,0,0},
+        {0,0,0,0}
+    }
 };
+
+// ================= CURRENT BLOCK =================
+int current[4][4];
+
+int posX;
+int posY;
+
+// ================= COLOR =================
 void setColor(int color)
 {
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 }
 
+// ================= INIT BOARD =================
 void initBoard()
 {
-    for(int i=0;i<H;i++)
+    for(int i=0;i<HEIGHT;i++)
     {
-        for(int j=0;j<W;j++)
+        for(int j=0;j<WIDTH;j++)
         {
-            if(i==0 || i==H-1 || j==0 || j==W-1)
-                board[i][j] = '*';
+            if(j==0 || j==WIDTH-1 || i==HEIGHT-1)
+                board[i][j] = '#';
             else
                 board[i][j] = ' ';
         }
     }
 }
 
+// ================= SPAWN BLOCK =================
+void spawnBlock()
+{
+    int id = rand() % 7;
+
+    for(int i=0;i<4;i++)
+    {
+        for(int j=0;j<4;j++)
+        {
+            current[i][j] = shapes[id][i][j];
+        }
+    }
+
+    posX = WIDTH / 2 - 2;
+    posY = 0;
+}
+
+// ================= COLLISION =================
+bool collision(int dx, int dy)
+{
+    for(int i=0;i<4;i++)
+    {
+        for(int j=0;j<4;j++)
+        {
+            if(current[i][j])
+            {
+                int nx = posX + j + dx;
+                int ny = posY + i + dy;
+
+                if(nx < 0 || nx >= WIDTH ||
+                   ny < 0 || ny >= HEIGHT)
+                    return true;
+
+                if(board[ny][nx] != ' ')
+                    return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+// ================= MERGE BLOCK =================
+void mergeBlock()
+{
+    for(int i=0;i<4;i++)
+    {
+        for(int j=0;j<4;j++)
+        {
+            if(current[i][j])
+            {
+                board[posY+i][posX+j] = 'X';
+            }
+        }
+    }
+}
+
+// ================= CLEAR LINES =================
+void clearLines()
+{
+    for(int i=HEIGHT-2;i>=0;i--)
+    {
+        bool full = true;
+
+        for(int j=1;j<WIDTH-1;j++)
+        {
+            if(board[i][j] == ' ')
+            {
+                full = false;
+                break;
+            }
+        }
+
+        if(full)
+        {
+            for(int k=i;k>0;k--)
+            {
+                for(int j=1;j<WIDTH-1;j++)
+                {
+                    board[k][j] = board[k-1][j];
+                }
+            }
+
+            i++;
+        }
+    }
+}
+
+// ================= DRAW =================
 void draw()
 {
     system("cls");
 
-    for(int i=0;i<H;i++)
+    char temp[HEIGHT][WIDTH];
+
+    // copy board
+    for(int i=0;i<HEIGHT;i++)
     {
-        for(int j=0;j<W;j++)
+        for(int j=0;j<WIDTH;j++)
         {
-            char c = board[i][j];
+            temp[i][j] = board[i][j];
+        }
+    }
 
-            // Viền
-            if(c == '*')
+    // add current block
+    for(int i=0;i<4;i++)
+    {
+        for(int j=0;j<4;j++)
+        {
+            if(current[i][j])
+            {
+                temp[posY+i][posX+j] = 'X';
+            }
+        }
+    }
+
+    // draw
+    for(int i=0;i<HEIGHT;i++)
+    {
+        for(int j=0;j<WIDTH;j++)
+        {
+            // viền
+            if(temp[i][j] == '#')
             {
                 setColor(15);
-                cout << "+";
+                cout << "||";
             }
 
-            // Block
-            else if(c != ' ')
+            // block
+            else if(temp[i][j] == 'X')
             {
-                setColor(15);
-                cout << char(219) << char(219);
+                setColor(11);
+                cout << "[]";
             }
 
-            // Khoảng trống
+            // khoảng trống
             else
             {
                 cout << "  ";
@@ -113,156 +245,72 @@ void draw()
     setColor(7);
 
     cout << endl;
-    cout << "A: Left  D: Right  S: Down  Q: Quit" << endl;
+    cout << "A = LEFT | D = RIGHT | S = DOWN | Q = QUIT" << endl;
 }
 
-bool canMove(int dx, int dy)
-{
-    for(int i=0;i<4;i++)
-    {
-        for(int j=0;j<4;j++)
-        {
-            if(blocks[b][i][j] != ' ')
-            {
-                int newX = x + j + dx;
-                int newY = y + i + dy;
-
-                if(newX <= 0 || newX >= W-1 ||
-                   newY <= 0 || newY >= H-1)
-                    return false;
-
-                if(board[newY][newX] != ' ')
-                    return false;
-            }
-        }
-    }
-
-    return true;
-}
-void placeBlock()
-{
-    for(int i=0;i<4;i++)
-    {
-        for(int j=0;j<4;j++)
-        {
-            if(blocks[b][i][j] != ' ')
-            {
-                board[y+i][x+j] = blocks[b][i][j];
-            }
-        }
-    }
-}
-
-void removeBlock()
-{
-    for(int i=0;i<4;i++)
-    {
-        for(int j=0;j<4;j++)
-        {
-            if(blocks[b][i][j] != ' ')
-            {
-                board[y+i][x+j] = ' ';
-            }
-        }
-    }
-}
-
-void clearLines()
-{
-    for(int i=1;i<H-1;i++)
-    {
-        bool full = true;
-
-        for(int j=1;j<W-1;j++)
-        {
-            if(board[i][j] == ' ')
-            {
-                full = false;
-                break;
-            }
-        }
-
-        if(full)
-        {
-            for(int k=i;k>1;k--)
-            {
-                for(int j=1;j<W-1;j++)
-                {
-                    board[k][j] = board[k-1][j];
-                }
-            }
-
-            for(int j=1;j<W-1;j++)
-            {
-                board[1][j] = ' ';
-            }
-        }
-    }
-}
-
+// ================= MAIN =================
 int main()
 {
     srand(time(0));
 
     initBoard();
 
-    x = 5;
-    y = 1;
-    b = rand()%8;
+    spawnBlock();
 
     while(true)
     {
-        removeBlock();
-        
+        draw();
+
+        Sleep(150);
+
+        // INPUT
         if(kbhit())
         {
             char c = getch();
 
-            if((c=='a' || c=='A') && canMove(-1,0))
-                x--;
+            if((c=='a' || c=='A') && !collision(-1,0))
+                posX--;
 
-            if((c=='d' || c=='D') && canMove(1,0))
-                x++;
+            if((c=='d' || c=='D') && !collision(1,0))
+                posX++;
 
-            if((c=='s' || c=='S') && canMove(0,1))
-                y++;
+            if((c=='s' || c=='S') && !collision(0,1))
+                posY++;
 
             if(c=='q' || c=='Q')
                 break;
         }
-        if(canMove(0,1))
+
+        // FALL
+        if(!collision(0,1))
         {
-            y++;
+            posY++;
         }
         else
         {
-            placeBlock();
+            mergeBlock();
 
             clearLines();
 
-            x = 5;
-            y = 1;
-            b = rand()%8;
+            spawnBlock();
 
-            if(!canMove(0,0))
+            // GAME OVER
+            if(collision(0,0))
             {
                 system("cls");
 
                 setColor(12);
+
                 cout << "\n\n";
-                cout << "        GAME OVER!\n";
+                cout << "        GAME OVER\n\n";
 
                 setColor(7);
+
+                system("pause");
 
                 break;
             }
         }
-
-        placeBlock();
-
-        draw();
-
-        Sleep(180);
     }
 
     return 0;
