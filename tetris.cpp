@@ -88,24 +88,7 @@ void draw(){
     for (int i = 0 ; i < H ; i++, cout<<endl)
         for (int j = 0 ; j < W ; j++) cout<<board[i][j];
 }
-void removeLine()
-{
-    int i,j;
-    for (i = H-2 ; i > 0 ; i-- )
-        {
-        for (j = 1 ; j < W-1 ; j++)
-            if (board[i][j] == ' ') break;
-        if (j == W-1)
-        {
-            for (int ii = i ; ii > 0 ; ii--)
-                for (int jj = 0; jj < W-1; jj++)
-                    board[ii][jj] = board[ii-1][jj];
-            i++;
-            draw();
-            _sleep(400);
-        }
-    }
-}
+
 int main()
 {
     srand(time(0));
