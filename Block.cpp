@@ -1,25 +1,14 @@
-#include <iostream>
+#include "Block.h"
+#include <cstdlib>
 
-using namespace std;
+Block::Block(){
 
-class Block{
-public:
-    int x, y;
-    int type;
-
-    char shape[4][4];
-
-    char blocks[8][4][4] ={
+    char temp[7][4][4] ={
         // I-block (hình thẳng - dọc)
         {{' ','I',' ',' '},
          {' ','I',' ',' '},
          {' ','I',' ',' '},
          {' ','I',' ',' '}},
-        // I-block (hình thẳng - ngang)
-        {{' ',' ',' ',' '},
-         {'I','I','I','I'},
-         {' ',' ',' ',' '},
-         {' ',' ',' ',' '}},
         // O-block (hình vuông)
         {{' ',' ',' ',' '},
          {' ','O','O',' '},
@@ -52,9 +41,14 @@ public:
          {' ',' ',' ',' '}}
     };
 
-    Block(){
-        spawn();
-    }
+    for(int k = 0; k < 7; k++ )
+        for(int i = 0; i < 4; i++ )
+            for(int j = 0; j < 4; j++ )
+                blocks[k][i][j] = temp[k][i][j];
+    
+    spawn();
+}
+
 
     void spawn(){
         x = 0; 
