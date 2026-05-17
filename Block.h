@@ -3,12 +3,12 @@
 
 class Block{
 
-Private:
-    int shape[4][4];
-    int x, y;
-
 public:
-   Block();
+   int x, y;
+   int type;
+   char shape[4][4];
+   char blocks[7][4][4];
+        
 
    void
 }
