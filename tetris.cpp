@@ -153,6 +153,7 @@ int main()
             if ((c == 'a' || c == 'A') && canMove(-1,0)) x--;
             if ((c == 'd' || c == 'D') && canMove( 1,0)) x++;
             if ((c == 'x' || c == 'X') && canMove( 0,1)) y++;
+            if ((c == 'w' || c == 'W') && CanRotate()) Rotate();
             if (c == 'q' || c == 'Q') break;
         }
         if (canMove(0,1)) y++;
