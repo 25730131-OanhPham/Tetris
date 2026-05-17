@@ -50,18 +50,18 @@ Block::Block(){
 }
 
 
-    void spawn(){
+    void Block::spawn(){
         x = 0; 
         y = 0;
 
-        type = rand()%8;
+        type = rand()%7;
 
         for(int i = 0; i < 4; i++ )
             for(int j = 0; j < 4; j++ )
                 shape[i][j] = blocks[type][i][j];
     }
 
-    void rotate(){
+    void Block::rotate(){
         char temp[4][4];
         
         for(int i = 0; i < 4; i++ )
@@ -72,4 +72,3 @@ Block::Block(){
             for(int j = 0; j < 4; j++ )
                 shape[i][j] = temp[3-j][i];            
     }
-};
