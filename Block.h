@@ -8,9 +8,13 @@ public:
    int type;
    char shape[4][4];
    char blocks[7][4][4];
-        
 
-   void
-}
+   Block();
+
+   void spawn();
+
+   void rotate();
+        
+};
 
 #endif
