@@ -9,8 +9,7 @@ using namespace std;
 #define W 15
 
 char board[H][W] = {};
-int score = 0;
-int totalLines = 0;
+
 int x, y, b;
 char blocks[][4][4] ={
         // I-block (hình thẳng - dọc)
@@ -83,47 +82,6 @@ void draw(){
 
     for (int i = 0 ; i < H ; i++, cout<<endl)
         for (int j = 0 ; j < W ; j++) cout<<board[i][j];
-        cout << " Score     :"<< score << endl;
-        cout << " Lines     :"<< totalLines << endl;
-}
-void removeLine(){
-    
-    int i, j , lines = 0;
-    for (i = H-2; i > 0; i-- ){
-        for ( j = 0; j < W; j ++)
-            if (board [i][j] == ' ') break;
-        
-        if (j == W) {
-            for (int ii = i; ii > 0; ii --)
-            for (int jj = 0; jj < W; jj ++)
-            board [ii][jj] = board [ii - 1][jj];
-
-            i++;
-            lines++;
-            draw();
-            _sleep(200);
-
-        }    
-
-    }
-    totalLines += lines;
-
-    switch (lines)
-    {
-    case 1:
-        score += 100;
-        break;
-    case 2:
-        score += 300;
-        break;    
-    case 3:
-        score += 500;
-        break;
-    case 4:
-        score += 800;
-        break;    
-    
-    }
 }
 
 int main()
@@ -143,7 +101,6 @@ int main()
         if (canMove(0,1)) y++;
         else{
             block2Board();
-            removeLine();
             x = 5; y = 0; b = rand()%7;
             if (!canMove(0, 1)) {
                 system("cls");
