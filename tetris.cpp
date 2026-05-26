@@ -10,7 +10,7 @@ using namespace std;
 
 char board[H][W] = {};
 int score = 0;
-int totalLines = 0;
+
 int x, y, b;
 char blocks[][4][4] ={
         // I-block (hình thẳng - dọc)
@@ -84,10 +84,9 @@ void draw(){
     for (int i = 0 ; i < H ; i++, cout<<endl)
         for (int j = 0 ; j < W ; j++) cout<<board[i][j];
         cout << " Score     :"<< score << endl;
-        cout << " Lines     :"<< totalLines << endl;
+        
 }
-void removeLine(){
-    
+void removeLine(){    
     int i, j , lines = 0;
     for (i = H-2; i > 0; i-- ){
         for ( j = 0; j < W; j ++)
@@ -102,12 +101,9 @@ void removeLine(){
             lines++;
             draw();
             _sleep(200);
-
         }    
-
     }
-    totalLines += lines;
-
+    
     switch (lines)
     {
     case 1:
@@ -121,8 +117,7 @@ void removeLine(){
         break;
     case 4:
         score += 800;
-        break;    
-    
+        break;        
     }
 }
 
