@@ -7,7 +7,7 @@
 using namespace std;
 #define H 20
 #define W 15
-int fallsleep = 200;  // toc do roi ( ms )
+
 char board[H][W] = {};
 
 int x, y, b;
@@ -17,6 +17,11 @@ char blocks[][4][4] ={
          {' ','I',' ',' '},
          {' ','I',' ',' '},
          {' ','I',' ',' '}},
+        // I-block (hình thẳng - ngang)
+        {{' ',' ',' ',' '},
+         {'I','I','I','I'},
+         {' ',' ',' ',' '},
+         {' ',' ',' ',' '}},
         // O-block (hình vuông)
         {{' ',' ',' ',' '},
          {' ','O','O',' '},
@@ -83,16 +88,7 @@ void draw(){
     for (int i = 0 ; i < H ; i++, cout<<endl)
         for (int j = 0 ; j < W ; j++) cout<<board[i][j];
 }
-void capNhatTocDo(){
-    if (score >= 1000){
-        fallsleep = 150;
-    }
-    else {
-        fallsleep = 200;
-    }
 
-
-}
 int main()
 {
     srand(time(0));
@@ -110,7 +106,6 @@ int main()
         if (canMove(0,1)) y++;
         else{
             block2Board();
-            capNhatTocDo();
             x = 5; y = 0; b = rand()%7;
             if (!canMove(0, 1)) {
                 system("cls");
