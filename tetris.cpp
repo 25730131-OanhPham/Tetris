@@ -10,162 +10,58 @@
 using namespace std;
 
 #define H 20
-#define W 10
+#define W 15
+int fallSleep = 200;  // toc do roi ( ms )
+char board[H][W] = {};
+int score = 0;
 
-struct Block {
-
-    char shape[4][4];
-    char type;
-
-    int x;
-    int y;
+int x, y, b;
+char blocks[][4][4] ={
+        // I-block (hình thẳng - dọc)
+        {{' ','I',' ',' '},
+         {' ','I',' ',' '},
+         {' ','I',' ',' '},
+         {' ','I',' ',' '}},
+        // O-block (hình vuông)
+        {{' ',' ',' ',' '},
+         {' ','O','O',' '},
+         {' ','O','O',' '},
+         {' ',' ',' ',' '}},
+        // T-block (hình T - lên)
+        {{' ',' ',' ',' '},
+         {' ','T',' ',' '},
+         {'T','T','T',' '},
+         {' ',' ',' ',' '}},
+        // S-block (hình S)
+        {{' ',' ',' ',' '},
+         {' ','S','S',' '},
+         {'S','S',' ',' '},
+         {' ',' ',' ',' '}},
+        // Z-block (hình Z)
+        {{' ',' ',' ',' '},
+         {'Z','Z',' ',' '},
+         {' ','Z','Z',' '},
+         {' ',' ',' ',' '}},
+        // J-block (hình J)
+        {{' ',' ',' ',' '},
+         {'J',' ',' ',' '},
+         {'J','J','J',' '},
+         {' ',' ',' ',' '}},
+        // L-block (hình L)
+        {{' ',' ',' ',' '},
+         {' ',' ','L',' '},
+         {'L','L','L',' '},
+         {' ',' ',' ',' '}}
 };
 
-const Block TEMPLATE_BLOCKS[7] =
-{   
-
-    // I - BLOCK (Hình thẳng - dọc)
-    {
-        {
-            {' ',' ',' ',' '},
-            {'I','I','I','I'},
-            {' ',' ',' ',' '},
-            {' ',' ',' ',' '}
-        },
-
-        'I', 0, 0
-    },
-
-    // O - BLOCK (Hình vuông)
-    {
-        {
-            {' ',' ',' ',' '},
-            {' ','O','O',' '},
-            {' ','O','O',' '},
-            {' ',' ',' ',' '}
-        },
-
-        'O', 0, 0
-    },
-
-    // T - BLOCK (Hình chữ T - lên)
-
-    {
-        {
-            {' ','T',' ',' '},
-            {'T','T','T',' '},
-            {' ',' ',' ',' '},
-            {' ',' ',' ',' '}
-        },
-
-        'T', 0, 0
-    },
-
-    // S - BLOCK (Hình chữ S)   
-    {
-        {
-            {' ','S','S',' '},
-            {'S','S',' ',' '},
-            {' ',' ',' ',' '},
-            {' ',' ',' ',' '}
-        },
-
-        'S', 0, 0
-    },
-
-    // Z - BLOCK (Hình chữ Z)
-    {
-        {
-            {'Z','Z',' ',' '},
-            {' ','Z','Z',' '},
-            {' ',' ',' ',' '},
-            {' ',' ',' ',' '}
-        },
-
-        'Z', 0, 0
-    },
-
-    // J - BLOCK (Hình chữ J)
-    {
-        {
-            {'J',' ',' ',' '},
-            {'J','J','J',' '},
-            {' ',' ',' ',' '},
-            {' ',' ',' ',' '}
-        },
-
-        'J', 0, 0
-    },
-
-    // L - BLOCK (Hình chữ L)
-    {
-        {
-            {' ',' ','L',' '},
-            {'L','L','L',' '},
-            {' ',' ',' ',' '},
-            {' ',' ',' ',' '}
-        },
-
-        'L', 0, 0
-    }
-};
-
-// BIẾN TOÀN CỤC
-
-char board[H][W];
-
-Block currentBlock;
-
-// KHỞI TẠO BOARD
-
-void initBoard() {
-
-    for (int i = 0; i < H; i++) {
-
-        for (int j = 0; j < W; j++) {
-
-            board[i][j] = ' ';
-        }
-    }
-}
-
-// TẠO KHỐI MỚI
-
-void spawnNewBlock() {
-
-    int randomIndex = rand() % 7;
-
-    currentBlock = TEMPLATE_BLOCKS[randomIndex];
-
-    currentBlock.x = (W / 2) - 2;
-    currentBlock.y = 0;
-}
-
-// KIỂM TRA VA CHẠM
-
-bool canMove(int dx, int dy) {
-
-    for (int i = 0; i < 4; i++) {
-
-        for (int j = 0; j < 4; j++) {
-
-            if (currentBlock.shape[i][j] != ' ') {
-
-                int xt = currentBlock.x + j + dx;
-                int yt = currentBlock.y + i + dy;
-
-                // VA CHẠM BIÊN
-
-                if (xt < 0 || xt >= W)
-                    return false;
-
-                if (yt < 0 || yt >= H)
-                    return false;
-
-                // VA CHẠM KHỐI ĐÃ KHÓA
-
-                if (board[yt][xt] != ' ')
-                    return false;
+bool canMove(int dx, int dy){
+    for (int i = 0; i < 4; i++ )
+        for (int j = 0; j < 4; j++ )
+            if (blocks[b][i][j] != ' ') {
+                int xt = x + j + dx;
+                int yt = y + i + dy;
+                if (xt < 1 || xt >= W-1 || yt < 1 || yt >= H-1 ) return false;
+                if (board[yt][xt] != ' ') return false;
             }
         }
     }
@@ -173,142 +69,128 @@ bool canMove(int dx, int dy) {
     return true;
 }
 
-// NẠP KHỐI LÊN BOARD
-
-void block2Board() {
-
-    for (int i = 0; i < 4; i++) {
-
-        for (int j = 0; j < 4; j++) {
-
-            if (currentBlock.shape[i][j] != ' ') {
-
-                board[currentBlock.y + i][currentBlock.x + j]
-                    = currentBlock.shape[i][j];
-            }
-        }
-    }
+void block2Board(){
+    for (int i = 0; i < 4; i++ )
+        for (int j = 0; j < 4; j++ )
+            if (blocks[b][i][j] != ' ')
+                board[y+i][x+j] = blocks[b][i][j];
 }
 
-// XÓA KHỐI KHỎI BOARD
-
-void boardDelBlock() {
-
-    for (int i = 0; i < 4; i++) {
-
-        for (int j = 0; j < 4; j++) {
-
-            if (currentBlock.shape[i][j] != ' ') {
-
-                board[currentBlock.y + i][currentBlock.x + j]
-                    = ' ';
-            }
-        }
-    }
+void boardDelBlock(){
+    for (int i = 0; i < 4; i++ )
+        for (int j = 0; j < 4; j++ )
+            if (blocks[b][i][j] != ' ')
+                board[y+i][x+j] = ' ';
 }
 
-// VẼ BOARD
+void initBoard(){
+    for (int i = 0 ; i < H ; i++)
+        for (int j = 0 ; j < W ; j++)
+            if (i == 0 || i == H-1 || j ==0 || j == W-1) 
+              board[i][j] = '#';
+            else board[i][j] = ' ';
+}
 
-void draw() {
+void draw(){
+    system("cls");
 
-    // ĐƯA CON TRỎ VỀ GÓC TRÊN
-  
-    COORD cursorPosition;
-
-    cursorPosition.X = 0;
-    cursorPosition.Y = 0;
-
-    SetConsoleCursorPosition(
-        GetStdHandle(STD_OUTPUT_HANDLE),
-        cursorPosition
-    );
-
-    // VIỀN TRÊN
-
-    wcout << L"╔";
-
+    // Vien tren
+    wcout << "╔";
     for (int i = 0; i < W; i++) {
-
-        wcout << L"══";
+        cout << "══";
     }
-
-    wcout << L"╗" << endl;
-
-    // NỘI DUNG BOARD
-  
+    wcout << "╗" << endl;
+    
+    // Noi dung BOARD
     for (int i = 0; i < H; i++) {
-
-        // Viền trái
-        wcout << L"║";
-
+        wcout << "║";
         for (int j = 0; j < W; j++) {
-
-            // Ô chứa khối
-
             if (board[i][j] != ' ') {
-
-                wcout << L"⬛";
-            }
-
-            // Ô trống
-
-            else {
-
-                wcout << L"  ";
+                wcout << "██";
+            } else {
+                wcout << "  ";
             }
         }
-
-        // Viền phải
-        wcout << L"║";
-
-        wcout << endl;
+        wcout << "║" << endl;
     }
-
-    // VIỀN DƯỚI
-
-    wcout << L"╚";
-
+    
+    // Vien duoi
+    wcout << "╚";
     for (int i = 0; i < W; i++) {
-
-        wcout << L"══";
+        wcout << "══";
     }
-
-    wcout << L"╝" << endl;
+    wcout << "╝" << endl;
+    
+    wcout << " Score: " << score << endl;
+        
+}
+void capNhatTocDo(){
+    if (score >= 1000){
+        fallSleep = 150;
+    }
+    else {
+        fallSleep = 200;
+   }
 }
 
-// MAIN
+void removeLine(){    
+    int i, j , lines = 0;
+    for (i = H-2; i > 0; i-- ){
+        for ( j = 0; j < W; j ++)
+            if (board [i][j] == ' ') break;
+        
+        if (j == W) {
+            for (int ii = i; ii > 0; ii --)
+            for (int jj = 0; jj < W; jj ++)
+            board [ii][jj] = board [ii - 1][jj];
+
+            i++;
+            lines++;
+            draw();
+            _sleep(200);
+        }    
+    }
+    
+    switch (lines)
+    {
+    case 1:
+        score += 100;
+        break;
+    case 2:
+        score += 300;
+        break;    
+    case 3:
+        score += 500;
+        break;
+    case 4:
+        score += 800;
+        break;        
+    }
+}
 
 int main() {
     _setmode(_fileno(stdout), _O_U16TEXT);
-
     HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
-
     CONSOLE_CURSOR_INFO cursorInfo;
-
     GetConsoleCursorInfo(out, &cursorInfo);
-
     cursorInfo.bVisible = false;
-
     SetConsoleCursorInfo(out, &cursorInfo);
 
     // KHỞI TẠO GAME
-
     srand((unsigned)time(0));
-
     initBoard();
-
-    spawnNewBlock();
+    
+    x = 5;
+    y = 0;
+    b = rand() % 7;
 
     // GAME LOOP
-
     while (1) {
 
         boardDelBlock();
 
         // ĐIỀU KHIỂN
-
         if (kbhit()) {
-
             char c = getch();
 
             // Qua trái
@@ -339,39 +221,32 @@ int main() {
         // KHỐI TỰ RƠI
 
         if (canMove(0, 1)) {
-
-            currentBlock.y++;
+            y++;
         }
         else {
 
             // Khóa khối cũ
             block2Board();
-
-            // Sinh khối mới
-            spawnNewBlock();
-
-            // GAME OVER
-
+            removeLine();
+            capNhatTocDo();
+          
+            x = 5; y = 0; b = rand()%7;
+          
             if (!canMove(0, 1)) {
-
                 system("cls");
-
                 wcout << endl;
                 wcout << L"╔════════════════════╗" << endl;
                 wcout << L"║     GAME OVER!     ║" << endl;
+                wcout << "║  Score: " << score << "        ║" << endl;
                 wcout << L"╚════════════════════╝" << endl;
 
                 break;
             }
         }
 
-        // CẬP NHẬT BOARD
-
         block2Board();
-
         draw();
-
-        Sleep(150);
+        Sleep(fallSleep);
     }
 
     return 0;
