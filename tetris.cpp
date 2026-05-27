@@ -15,6 +15,8 @@ int fallSleep = 200;  // toc do roi ( ms )
 char board[H][W] = {};
 int score = 0;
 
+char curBlock[4][4] = {};
+
 int x, y, b;
 char blocks[][4][4] ={
         // I-block (hình thẳng - dọc)
@@ -63,9 +65,7 @@ bool canMove(int dx, int dy){
                 if (xt < 1 || xt >= W-1 || yt < 1 || yt >= H-1 ) return false;
                 if (board[yt][xt] != ' ') return false;
             }
-        }
-    }
-
+  
     return true;
 }
 
@@ -168,13 +168,44 @@ void removeLine(){
     }
 }
 
+bool CanRotate(){
+    char temp[4][4];
+
+    for(int i = 0; i < 4; i++){
+        for(int j = 0; j < 4; j++){
+            temp[i][j] = curBlock[3-j][i];
+        }
+    }
+    for (int i = 0; i < 4; i++){
+        for (int j = 0; j < 4; j++)
+            if (temp[i][j] != ' '){
+                int xt = x + j;
+                int yt = y + i;
+                if (xt < 1 || xt >= W-1 || yt < 1 || yt >= H-1 ) return false;
+                if (board[yt][xt] != ' ') return false;
+            }
+    }
+};
+
+void Rotate(){
+
+    char temp[4][4];
+
+    for(int i = 0; i < 4; i++)
+        for(int j = 0; j < 4; j++)
+            temp[i][j] = curBlock[i][j];
+
+    for(int i = 0; i < 4; i ++)
+        for(int j  = 0; j < 4; j++)
+            curBlock[i][j] = temp[3-j][i];
+};
+
+int main()
+{
+    srand(time(0));
+    x = 5; y = 0; b = rand()%7;
 int main() {
     _setmode(_fileno(stdout), _O_U16TEXT);
-    HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_CURSOR_INFO cursorInfo;
-    GetConsoleCursorInfo(out, &cursorInfo);
-    cursorInfo.bVisible = false;
-    SetConsoleCursorInfo(out, &cursorInfo);
 
     // KHỞI TẠO GAME
     srand((unsigned)time(0));
@@ -192,6 +223,11 @@ int main() {
         // ĐIỀU KHIỂN
         if (kbhit()) {
             char c = getch();
+            if ((c == 'a' || c == 'A') && canMove(-1,0)) x--;
+            if ((c == 'd' || c == 'D') && canMove( 1,0)) x++;
+            if ((c == 'x' || c == 'X') && canMove( 0,1)) y++;
+            if ((c == 'w' || c == 'W') && CanRotate()) Rotate();
+            if (c == 'q' || c == 'Q') break;
 
             // Qua trái
             if ((c == 'a' || c == 'A') && canMove(-1, 0)) {
