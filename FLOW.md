@@ -66,8 +66,7 @@ if (kbhit()) → Có phím được nhấn?
 **Luồng di chuyển:**
 1. `Board::removeBlock()` → Xóa khối khỏi grid
 2. `Board::canMove()` → Kiểm tra va chạm
-3. Nếu được phép: cập nhật `blockX` hoặc `blockY`
-4. `Board::placeBlock()` → Đặt khối lại vào grid
+3. `Board::placeBlock()` → Đặt khối lại vào grid
 
 #### **B. Drop Block** (`dropBlock()`)
 ```
@@ -206,8 +205,6 @@ class Game {
 
 ---
 
-## **Collision Detection**
-
 ### **canMove(x, y, dx, dy)**
 Kiểm tra xem khối có thể di chuyển không:
 
@@ -262,17 +259,6 @@ for (i=0; i<4; i++)
 ```cpp
 // Windows
 Sleep(ms);
-
-// macOS/Linux
-usleep(ms * 1000);
-
-// Timing chính xác
-std::chrono::steady_clock::time_point lastFallTime;
-auto elapsed = chrono::duration_cast<chrono::milliseconds>(
-  now() - lastFallTime
-).count();
-```
-
 ---
 
 ## **Input Handling**
@@ -282,29 +268,10 @@ auto elapsed = chrono::duration_cast<chrono::milliseconds>(
 kbhit()  → _kbhit()
 getch()  → _getch()
 
-// macOS/Linux (Unix)
-kbhit()  → select() + FD_ISSET()
-getch()  → getchar() + termios mode
-
 // Terminal mode (Unix)
 setupTerminal()    → Disable canonical mode (raw input)
 restoreTerminal()  → Restore normal mode
 ```
-
----
-
-## **Ví dụ: Một lượt chơi**
-
-1. **Bắt đầu:** Block I rơi từ (5,0)
-2. **Frame 1-12:** Người chơi nhấn 'D' 2 lần → Block di chuyển phải
-3. **Frame 13-20:** Khối tự rơi (fallSpeed=200ms)
-4. **Frame 21:** Đụng block khác → Lock
-5. **Frame 22:** Kiểm tra dòng đầy → Xóa 1 dòng → +100 score
-6. **Frame 23:** Tạo khối O tiếp theo
-7. **...**
-8. **Game Over:** Khối mới không thể spawn → Hiển thị score → Thoát
-
----
 
 ## **Key Functions Call Order**
 
@@ -344,7 +311,6 @@ main()
 g++ -std=c++11 tetris.cpp Block.cpp Board.cpp Game.cpp -o tetris
 
 # Run
-./tetris              # macOS/Linux
 tetris.exe            # Windows
 ```
 

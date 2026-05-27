@@ -78,13 +78,12 @@ public:
 
 ```
 I-Block       O-Block       T-Block       S-Block
-  ■             ■ ■           ■           ■ ■
-  ■             ■ ■         ■ ■ ■       ■ ■
+  ■             ■ ■           ■             ■ ■
+  ■             ■ ■         ■ ■ ■         ■ ■
   ■                           
-  ■                         Z-Block       J-Block       L-Block
-                          ■ ■             ■             ■
-                            ■ ■         ■ ■ ■       ■ ■ ■
-                                          ■               ■
+  ■                       Z-Block        L-Block        J-Block
+                          ■ ■            ■                  ■
+                            ■ ■          ■ ■ ■          ■ ■ ■           
 ```
 
 ### **2. Board Class** (Board.h/cpp)
@@ -157,7 +156,7 @@ public:
 ### **Bước 1: Clone repository**
 
 ```bash
-git clone https://github.com/25730162/Tetris.git
+git clone https://github.com/25730131-OanhPham/Tetris
 cd Tetris
 ```
 
@@ -174,13 +173,9 @@ Nhấn Ctrl+Shift+B (hoặc F5 → Run)
 ### **Bước 3: Chạy game**
 
 ```bash
-# macOS/Linux
-./tetris
-
 # Windows
 tetris.exe
 ```
-
 ---
 
 ## 🎮 **Cách chơi**
@@ -230,19 +225,6 @@ Game Over
 
 ---
 
-## 💻 **Cross-Platform Support**
-
-Code hỗ trợ chạy trên nhiều hệ điều hành:
-
-```cpp
-#ifdef _WIN32
-    // Windows: Sleep(), _kbhit(), _getch()
-#else
-    // macOS/Linux: usleep(), select(), getchar()
-    // Terminal mode: termios
-#endif
-```
-
 **Deployment Windows:** Chỉ cần g++ compiler trên Windows  
 **Test macOS:** Code tự động detect OS và dùng system call phù hợp
 
@@ -256,7 +238,6 @@ Code hỗ trợ chạy trên nhiều hệ điều hành:
 | **OOP** | Kiến trúc (Block, Board, Game) |
 | **std::chrono** | Timer chính xác |
 | **Console API** | Vẽ UI (cls, system calls) |
-| **Cross-platform** | Windows/macOS/Linux |
 
 ---
 
@@ -290,10 +271,8 @@ Game::run()
 
 ✅ **OOP Design:** Tách logic thành 3 class độc lập  
 ✅ **Collision Detection:** Kiểm tra va chạm chính xác  
-✅ **Game Loop:** ~60 FPS render với ~200ms block fall  
-✅ **Cross-platform:** Conditional compilation dựa trên OS  
+✅ **Game Loop:** ~60 FPS render với ~200ms block fall   
 ✅ **Console UI:** Vẽ trực tiếp lên terminal  
-✅ **Memory Management:** Quản lý array, objects, pointers  
 ✅ **Git Workflow:** Version control, branching, push
 
 ---
@@ -312,9 +291,9 @@ Game::run()
 ## 👨‍💼 **Author & Submission**
 
 - **Project:** SS004.F21.CNTT - Game Tetris Console
-- **GitHub:** https://github.com/25730162/Tetris
+- **GitHub:** https://github.com/25730131-OanhPham/Tetris
 - **Language:** C++ (C++11 standard)
-- **Status:** ✅ Complete (OOP refactored)
+- **Status:** ✅ Complete
 
 ---
 
@@ -322,7 +301,6 @@ Game::run()
 
 - **README.md** - Giới thiệu & hướng dẫn (file này)
 - **FLOW.md** - Chi tiết luồng chạy & function calls
-- **.vscode/tasks.json** - Cấu hình compile
 
 ---
 
@@ -335,17 +313,22 @@ Game::run()
 ❌ Trò chơi kết thúc khi khối chạm đỉnh bảng.
 
 # 👥 Phân công nhóm #
- **Vương & Tuấn**  
-  - Phụ trách làm hợp đồng và viết báo cáo (2 người phối hợp).
-  - Vương: Viết và hoàn thiện phần README, tài liệu hướng dẫn.
-
- **Quý**  
-  - Viết hàm `removeline` để xử lý xóa hàng.  
-  - Cài đặt tốc độ rơi của khối.
-
-**Khôi**  
-  - Viết hàm `block` để quản lý khối.  
-  - Cài đặt chức năng xoay khối.
+**  Nguyễn Phú Quý **
+  – Xử lý xóa hàng
+  – Cập nhật tốc độ rơi khi điểm người chơi tăng
+** Nguyễn Đăng Khôi **
+  – Xoay khối
+  – Viết class Block: xử lý các khối Tetris
+** Phạm Duy Phương Oanh **
+  – Viết tài liệu hướng dẫn chạy chương trình và luồng mã nguồn
+  – Kiểm soát việc merge code vào nhánh chính (main)
+  – Viết class Game: xử lý game loop
+  – Viết class Board: xử lý hiển thị trò chơi
+** Nguyễn Ngọc Tuấn **
+  – Phụ trách làm hợp đồng
+  – Viết báo cáo
+** Chung Ngọc Đường **
+  – Hoàn thiện giao diện các khối tetris và khung trò chơ
 
 # 📌 Ý nghĩa dự án
 Dự án không chỉ tạo ra một trò chơi giải trí mà còn giúp nhóm:
