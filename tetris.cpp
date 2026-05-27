@@ -4,8 +4,7 @@
 #include <ctime>
 #include <conio.h>
 #include <windows.h>
-#include <io.h>
-#include <fcntl.h>
+#include <block.h>
 
 using namespace std;
 
