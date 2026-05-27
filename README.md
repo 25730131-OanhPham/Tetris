@@ -1,4 +1,4 @@
-# 📖 **Giới thiệu dự án -- Game Tetris Console** #
+# 📖 **Giới thiệu dự án - Game Tetris Console** #
 
 #### Dự án này được thực hiện trong khuôn khổ môn học SS004.F21.CNTT, với mục tiêu xây dựng trò chơi Tetris bằng ngôn ngữ C++. Đây là những trò chơi kinh điển, giúp người chơi rèn luyện phản xạ, tư duy logic và khả năng xử lý tình huống nhanh.
 
