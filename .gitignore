@@ -1,0 +1,16 @@
+# Executable files
+tetris
+*.exe
+*.out
+
+# Object files
+*.o
+*.a
+
+# IDE
+.vscode/
+.idea/
+
+# System files
+.DS_Store
+.DS_Store
