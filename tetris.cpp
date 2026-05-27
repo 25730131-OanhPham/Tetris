@@ -7,7 +7,7 @@
 using namespace std;
 #define H 20
 #define W 15
-
+int fallSleep = 200;  // toc do roi ( ms )
 char board[H][W] = {};
 int score = 0;
 
@@ -91,6 +91,12 @@ void draw(){
         cout << " Score     :" << score << endl;
         
 }
+void capNhatTocDo(){
+    if (score >= 1000){
+        fallSleep = 150;
+    }
+    else {
+        fallSleep = 200;
 
 void removeLine(){    
     int i, j , lines = 0;
@@ -145,6 +151,7 @@ int main()
         else{
             block2Board();
             removeLine();
+            capNhatTocDo();
             x = 5; y = 0; b = rand()%7;
             if (!canMove(0, 1)) {
                 system("cls");
@@ -154,7 +161,7 @@ int main()
         }
         block2Board();
         draw();
-        Sleep(150);
+        Sleep(fallSleep);
     }
     return 0;
 }
