@@ -5,9 +5,7 @@
 Dự án này là implement **Tetris - trò chơi kinh điển** bằng **C++** với **kiến trúc OOP** (Object-Oriented Programming). Mục tiêu của dự án là:
 
 ✅ Xây dựng game Tetris hoàn chỉnh chạy trên console  
-✅ Áp dụng **OOP principles** với 3 class chính: `Block`, `Board`, `Game`  
-✅ Hỗ trợ **cross-platform** (Windows, macOS, Linux) với input/output tương thích  
-✅ Implement **collision detection** chính xác  
+✅ Áp dụng **OOP principles** với 3 class chính: `Block`, `Board`, `Game`   
 ✅ Quản lý **scoring system** với điểm tăng theo số dòng xóa  
 ✅ Rèn luyện kỹ năng **lập trình hướng đối tượng** và **quản lý bộ nhớ**
 
