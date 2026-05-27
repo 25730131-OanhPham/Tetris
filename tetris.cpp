@@ -1,10 +1,14 @@
 #include <iostream>
+#include <vector>
 #include <cstdlib>
 #include <ctime>
 #include <conio.h>
 #include <windows.h>
+#include <io.h>
+#include <fcntl.h>
 
 using namespace std;
+
 #define H 20
 #define W 15
 int fallSleep = 200;  // toc do roi ( ms )
@@ -59,6 +63,9 @@ bool canMove(int dx, int dy){
                 if (xt < 1 || xt >= W-1 || yt < 1 || yt >= H-1 ) return false;
                 if (board[yt][xt] != ' ') return false;
             }
+        }
+    }
+
     return true;
 }
 
@@ -79,16 +86,42 @@ void boardDelBlock(){
 void initBoard(){
     for (int i = 0 ; i < H ; i++)
         for (int j = 0 ; j < W ; j++)
-            if (i == 0 || i == H-1 || j ==0 || j == W-1) board[i][j] = '#';
+            if (i == 0 || i == H-1 || j ==0 || j == W-1) 
+              board[i][j] = '#';
             else board[i][j] = ' ';
 }
 
 void draw(){
     system("cls");
 
-    for (int i = 0 ; i < H ; i++, cout<<endl)
-        for (int j = 0 ; j < W ; j++) cout<<board[i][j];
-        cout << " Score     :" << score << endl;
+    // Vien tren
+    wcout << "╔";
+    for (int i = 0; i < W; i++) {
+        cout << "══";
+    }
+    wcout << "╗" << endl;
+    
+    // Noi dung BOARD
+    for (int i = 0; i < H; i++) {
+        wcout << "║";
+        for (int j = 0; j < W; j++) {
+            if (board[i][j] != ' ') {
+                wcout << "██";
+            } else {
+                wcout << "  ";
+            }
+        }
+        wcout << "║" << endl;
+    }
+    
+    // Vien duoi
+    wcout << "╚";
+    for (int i = 0; i < W; i++) {
+        wcout << "══";
+    }
+    wcout << "╝" << endl;
+    
+    wcout << " Score: " << score << endl;
         
 }
 void capNhatTocDo(){
@@ -97,6 +130,8 @@ void capNhatTocDo(){
     }
     else {
         fallSleep = 200;
+   }
+}
 
 void removeLine(){    
     int i, j , lines = 0;
@@ -133,35 +168,86 @@ void removeLine(){
     }
 }
 
-int main()
-{
-    srand(time(0));
-    x = 5; y = 0; b = rand()%7;
+int main() {
+    _setmode(_fileno(stdout), _O_U16TEXT);
+    HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_CURSOR_INFO cursorInfo;
+    GetConsoleCursorInfo(out, &cursorInfo);
+    cursorInfo.bVisible = false;
+    SetConsoleCursorInfo(out, &cursorInfo);
+
+    // KHỞI TẠO GAME
+    srand((unsigned)time(0));
     initBoard();
-    while (1){
+    
+    x = 5;
+    y = 0;
+    b = rand() % 7;
+
+    // GAME LOOP
+    while (1) {
+
         boardDelBlock();
-        if (kbhit()){
+
+        // ĐIỀU KHIỂN
+        if (kbhit()) {
             char c = getch();
-            if ((c == 'a' || c == 'A') && canMove(-1,0)) x--;
-            if ((c == 'd' || c == 'D') && canMove( 1,0)) x++;
-            if ((c == 'x' || c == 'X') && canMove( 0,1)) y++;
-            if (c == 'q' || c == 'Q') break;
-        }
-        if (canMove(0,1)) y++;
-        else{
-            block2Board();
-            removeLine();
-            capNhatTocDo();
-            x = 5; y = 0; b = rand()%7;
-            if (!canMove(0, 1)) {
-                system("cls");
-                cout << "Game Over!" << endl;
+
+            // Qua trái
+            if ((c == 'a' || c == 'A') && canMove(-1, 0)) {
+
+                currentBlock.x--;
+            }
+
+            // Qua phải
+            if ((c == 'd' || c == 'D') && canMove(1, 0)) {
+
+                currentBlock.x++;
+            }
+
+            // Rơi nhanh
+            if ((c == 'x' || c == 'X') && canMove(0, 1)) {
+
+                currentBlock.y++;
+            }
+
+            // Thoát game
+            if (c == 'q' || c == 'Q') {
+
                 break;
             }
         }
+
+        // KHỐI TỰ RƠI
+
+        if (canMove(0, 1)) {
+            y++;
+        }
+        else {
+
+            // Khóa khối cũ
+            block2Board();
+            removeLine();
+            capNhatTocDo();
+          
+            x = 5; y = 0; b = rand()%7;
+          
+            if (!canMove(0, 1)) {
+                system("cls");
+                wcout << endl;
+                wcout << L"╔════════════════════╗" << endl;
+                wcout << L"║     GAME OVER!     ║" << endl;
+                wcout << "║  Score: " << score << "        ║" << endl;
+                wcout << L"╚════════════════════╝" << endl;
+
+                break;
+            }
+        }
+
         block2Board();
         draw();
         Sleep(fallSleep);
     }
+
     return 0;
 }
