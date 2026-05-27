@@ -47,7 +47,7 @@ void Game::handleInput() {
         input = tolower(input);
         
         // Move left
-        if (input == 'a') {
+        if (input == 'a' || input == 'A') {
             board.removeBlock(blockX, blockY, currentBlock);
             if (board.canMove(blockX, blockY, currentBlock, -1, 0)) {
                 blockX--;
@@ -56,7 +56,7 @@ void Game::handleInput() {
         }
         
         // Move right
-        if (input == 'd') {
+        if (input == 'd' || input == 'D') {
             board.removeBlock(blockX, blockY, currentBlock);
             if (board.canMove(blockX, blockY, currentBlock, 1, 0)) {
                 blockX++;
@@ -65,7 +65,7 @@ void Game::handleInput() {
         }
         
         // Rotate
-        if (input == 'w') {
+        if (input == 'w' || input == 'W') {
             board.removeBlock(blockX, blockY, currentBlock);
             if (board.canRotate(blockX, blockY, currentBlock)) {
                 currentBlock.rotate();
@@ -74,7 +74,7 @@ void Game::handleInput() {
         }
         
         // Fast fall
-        if (input == 'x') {
+        if (input == 'x' || input == 'X') {
             board.removeBlock(blockX, blockY, currentBlock);
             if (board.canMove(blockX, blockY, currentBlock, 0, 1)) {
                 blockY++;
@@ -83,7 +83,7 @@ void Game::handleInput() {
         }
         
         // Quit
-        if (input == 'q') {
+        if (input == 'q' || input == 'Q') {
             isRunning = false;
         }
     }
