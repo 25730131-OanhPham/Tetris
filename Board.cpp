@@ -1,7 +1,11 @@
 #include "Board.h"
 #include <cstdlib>
 #include <iostream>
+#if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
+#else
+#include <unistd.h>
+#endif
 
 using namespace std;
 
@@ -73,12 +77,19 @@ bool Board::canMove(int x, int y, const Block& block, int dx, int dy) const {
             if (block.shape[i][j] != ' ') {
                 int newRow = y + i + dy;
                 int newCol = x + j + dx;
-                
-                if (newRow < 0 || newRow >= HEIGHT || newCol < 0 || newCol >= WIDTH) {
+                // Allow pieces that are above the visible board (newRow < 0)
+                // but still prevent moving out of horizontal bounds or below the board.
+                if (newCol < 0 || newCol >= WIDTH) {
                     return false;
                 }
-                if (grid[newRow][newCol] != ' ') {
+                if (newRow >= HEIGHT) {
                     return false;
+                }
+                // Only check grid contents when the target row is within the board
+                if (newRow >= 0) {
+                    if (grid[newRow][newCol] != ' ') {
+                        return false;
+                    }
                 }
             }
         }
@@ -101,12 +112,17 @@ bool Board::canRotate(int x, int y, const Block& block) const {
             if (tempShape[i][j] != ' ') {
                 int row = y + i;
                 int col = x + j;
-                
-                if (row < 0 || row >= HEIGHT || col < 0 || col >= WIDTH) {
+                // Allow rotation when part of the piece is above the visible board (row < 0)
+                if (col < 0 || col >= WIDTH) {
                     return false;
                 }
-                if (grid[row][col] != ' ') {
+                if (row >= HEIGHT) {
                     return false;
+                }
+                if (row >= 0) {
+                    if (grid[row][col] != ' ') {
+                        return false;
+                    }
                 }
             }
         }
@@ -159,7 +175,11 @@ void Board::clearLine() {
             lines++;
             
             draw();
+#if defined(_WIN32) || defined(_WIN64)
             Sleep(200);
+#else
+            usleep(200 * 1000);
+#endif
         }
     }
     
@@ -181,7 +201,11 @@ void Board::updateFallSpeed() {
 }
 
 void Board::draw() const {
+#if defined(_WIN32) || defined(_WIN64)
     system("cls");
+#else
+    system("clear");
+#endif
     
     // Top border
     cout << "╔";

@@ -4,8 +4,14 @@
 #include "Board.h"
 #include "Block.h"
 #include <chrono>
+#if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
 #include <conio.h>
+#else
+#include <termios.h>
+#include <unistd.h>
+#include <sys/select.h>
+#endif
 
 class Game {
 private:
@@ -15,6 +21,10 @@ private:
     int blockY;
     bool isRunning;
     std::chrono::steady_clock::time_point lastFallTime;
+    
+    // Internal helpers
+    void spawnNewBlock();
+    void dropBlock();
     
 public:
     Game();
@@ -30,7 +40,7 @@ public:
     // Terminal setup/cleanup
     void setupTerminal();
     void restoreTerminal();
-    d lockBlock();
+    void lockBlock();
     void checkGameOver();
     
     // Helper
